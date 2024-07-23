@@ -2,24 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-
     const [user, setUser] = useState(null)
-
     const [showMoreInfo, setShowMoreInfo] = useState(false);
 
     useEffect(() => {
         getUser();
     },[]);
 
-    function getUser() {
-    const url = 'https://randomuser.me/api/';
-
-    fetch(url)
-      .then((resp) => resp.json())
+    const getUser=() => {
+    fetch('https://randomuser.me/api')
+      .then((response) => response.json())
       .then((data) => {
         setUser(data.results[0]);
-      });
-  }
+      })
+      .catch(error=>console.error('Error fetching user:',error));
+     };
 
     const toggleMoreInfo = () => {
         setShowMoreInfo(!showMoreInfo);
@@ -35,10 +32,10 @@ function App() {
                 <div className="details">
                     <h2>{`${user.name.first} ${user.name.last}`}</h2>
                     <p><strong>Gender:</strong>{user.gender}</p>
-                    <p><strong>Phone:</strong>{user.phone}
-                    </p>{showMoreInfo && (
+                    <strong>Phone:</strong>{user.phone}
+                    {showMoreInfo && (
                         <div>
-                            <p><strong>Date of Birth:</strong>{user.dob.date}</p>
+                            <p><strong>Date of Birth:</strong>{new Date(user.dob.date).toLocaleDateString()}</p>
                             <h4>Location:{`${user.location.city}, ${user.location.state}, ${user.location.country}`}</h4>
                             <p><strong>Email:</strong>{user.email}</p>
                             <p><strong>Nationality:</strong>{user.nat}</p>
